@@ -28,7 +28,7 @@ class OrderUpdate(BaseModel):
 class Order(OrderBase):
     id: int
     order_date: Optional[datetime] = None
-    order_details: List[OrderDetail] = []
+    order_details: list[OrderDetail] = []
 
     class ConfigDict:
         from_attributes = True

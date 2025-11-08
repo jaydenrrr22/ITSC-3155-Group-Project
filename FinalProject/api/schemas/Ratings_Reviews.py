@@ -11,7 +11,7 @@ class RatingReviewCreate(RatingReviewBase):
     pass
 
 
-class RatingReviewResponse(RatingReviewBase):
+class RatingReview(RatingReviewBase):
     id: int
 
     class Config:

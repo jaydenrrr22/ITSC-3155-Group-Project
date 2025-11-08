@@ -6,6 +6,7 @@ from ..dependencies.database import Base
 class RatingsReviews(Base):
     __tablename__ = "RatingsReviews"
 
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     reviewText = Column(String(100), nullable=False, unique=False)
     ratingScore = Column(DECIMAL(1,1), nullable=False, unique=False)
 

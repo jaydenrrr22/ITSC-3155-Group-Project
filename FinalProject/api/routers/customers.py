@@ -9,6 +9,6 @@ router = APIRouter(
     prefix="/customers"
 )
 
-@router.post("/", response_model=schema.customers)
-def create(request: schema.customersCreate, db: Session = Depends(get_db)):
+@router.post("/", response_model=schema.Customer)
+def create(request: schema.CustomerCreate, db: Session = Depends(get_db)):
     return controller.create(db=db, request=request)

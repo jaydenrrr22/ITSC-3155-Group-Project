@@ -14,7 +14,7 @@ class CustomerCreate(CustomerBase):
 
 
 # Schema used when returning a customer from the API
-class CustomerResponse(CustomerBase):
+class Customer(CustomerBase):
     id: int
 
     class Config:
