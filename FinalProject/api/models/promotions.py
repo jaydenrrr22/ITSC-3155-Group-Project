@@ -29,7 +29,7 @@ class Promotions(Base):
         nullable=True
     )
 
-    Promotions = relationship("Promotions", back_populates="Customers")
+    Promotions = relationship("Promotions", back_populates="order_details")
 
     
     is_active = Column(Boolean, default=True)
