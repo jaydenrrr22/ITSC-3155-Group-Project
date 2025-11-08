@@ -1,31 +1,39 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, DECIMAL, DATETIME
-from sqlalchemy.orm import relationship
-from datetime import datetime
-from ..dependencies.database import Base
-from datetime import datetime
-
-
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean
 from sqlalchemy.orm import declarative_base
-from datetime import datetime
+from datetime import datetime, timezone
 
 Base = declarative_base()
 
 class Promotions(Base):
     __tablename__ = "promotions"
 
-    # Primary key + foreign key to orders.id
-    promotion_id = Column(Integer, ForeignKey("orders.id"), primary_key=True, nullable=False)
-    
+    # Primary key for promotions
+    id = Column(Integer, primary_key=True, autoincrement=True)
+
     # Promotion info
     promotion_name = Column(String(100), nullable=False)
+    description = Column(String(255), nullable=True)  # optional description
     
-    # Dates
-    generate_date = Column(DateTime, nullable=False, default=datetime.utcnow)
-    expiration_date = Column(DateTime, nullable=True)
+    # Link to an order (optional, can be nullable if promotion not tied to a single order)
+    order_id = Column(Integer, ForeignKey("orders.id"), nullable=True)
+
+    # Dates with timezone-aware datetimes
+    generate_date = Column(
+        DateTime(timezone=True),
+        nullable=False,
+        default=lambda: datetime.now(timezone.utc)
+    )
+    expiration_date = Column(
+        DateTime(timezone=True),
+        nullable=True
+    )
+
+    # Active flag
+    is_active = Column(Boolean, default=True)
 
     def __repr__(self):
-        return f"<Promotion(id={self.promotion_id}, name={self.promotion_name})>"
+        return f"<Promotion(id={self.id}, name={self.promotion_name}, active={self.is_active})>"
+
 
 
 
