@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Boolean
 from sqlalchemy.orm import declarative_base
 from datetime import datetime, timezone
+from sqlalchemy.orm import relationship
 
 Base = declarative_base()
 
@@ -27,6 +28,8 @@ class Promotions(Base):
         DateTime(timezone=True),
         nullable=True
     )
+
+    Promotions = relationship("Promotions", back_populates="Customers")
 
     # Active flag
     is_active = Column(Boolean, default=True)
