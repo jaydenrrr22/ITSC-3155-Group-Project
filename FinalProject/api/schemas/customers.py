@@ -2,6 +2,7 @@ from pydantic import BaseModel
 
 # Base schema shared between Create and Read
 class CustomerBase(BaseModel):
+    id: int
     customerName: str
     customerEmail: str
     customerPhone: str
