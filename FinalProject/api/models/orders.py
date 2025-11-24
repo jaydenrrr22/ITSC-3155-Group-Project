@@ -9,7 +9,7 @@ class Order(Base):
     #order Id
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     #tracking number for order
-    tracking_number = Column(String(30), unique=True, nullable=False)
+    tracking_number = Column(Integer, unique=True, nullable=False)
     # Status: e.g., "Pending", "Preparing", "Completed"
     order_status = Column(String(100), nullable=False)
     # Total price of the order
