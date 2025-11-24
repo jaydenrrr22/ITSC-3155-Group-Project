@@ -6,6 +6,7 @@ class PaymentInformationBase(BaseModel):
     card_information: str
     transaction_status: str
     payment_type: str
+    customer_id: int
 
 
 class PaymentInformationCreate(PaymentInformationBase):
@@ -20,6 +21,7 @@ class PaymentInformationUpdate(BaseModel):
 
 class Payment_information(PaymentInformationBase):
     id: int
+    customer_id: int
 
     class ConfigDict:
         from_attributes = True
