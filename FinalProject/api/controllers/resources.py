@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status, Response
 from ..models import resources as model
-from ..schemas.resource import ResourceCreate, ResourceUpdate
+from ..schemas.resources import ResourceCreate, ResourceUpdate
 from sqlalchemy.exc import SQLAlchemyError
 
 def create(db: Session, request: ResourceCreate):

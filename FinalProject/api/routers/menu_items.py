@@ -5,7 +5,7 @@ from ..schemas import menu_items as schema
 from ..dependencies.database import engine, get_db
 
 router = APIRouter(
-    tags=['Menu Items'],
+    tags=['MenuItems'],
     prefix="/menu_items"
 )
 
