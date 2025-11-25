@@ -5,6 +5,7 @@ from .recipes import Recipe
 class MenuItemBase(BaseModel):
     name: str
     description: Optional[str] = None
+    quantity: Optional[int] = None
     price: float
     calories: Optional[int] = None
     category: str

@@ -1,13 +1,13 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status, Response
 from ..models import menu_items as model
-from ..schemas.menu_items import MenuItemsUpdate, MenuItemsCreation
+from ..schemas.menu_items import MenuItemsUpdate, MenuItemBase
 from sqlalchemy.exc import SQLAlchemyError
 
 
 
 
-def create(db: Session, request: MenuItemsCreation):
+def create(db: Session, request: MenuItemBase):
     new_menu_item = model.MenuItem(
         name=request.name,
         description=request.description,
