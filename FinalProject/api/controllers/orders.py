@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException, status, Response, Depends
 from ..models import orders as model
 from sqlalchemy.exc import SQLAlchemyError
+from datetime import date
 
 
 def create(db: Session, request):
@@ -26,9 +27,17 @@ def create(db: Session, request):
     return new_item
 
 
-def read_all(db: Session):
+def read_all(db: Session, start_date: date=None, end_date: date=None):
     try:
-        result = db.query(model.Order).all()
+        query = db.query(model.Order)
+
+        # If both dates are provided → filter by range
+        if start_date and end_date:
+            query = query.filter(model.Order.order_date >= start_date, model.Order.order_date <= end_date)
+
+        result = query.all()
+
+        return result
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)

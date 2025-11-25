@@ -53,7 +53,7 @@ def update(db: Session, item_id: int, request: MenuItemsUpdate):
         update_data = request.dict(exclude_unset=True)
         item.update(update_data, synchronize_session=False)
         db.commit()
-        db.refresh(item)
+        db.refresh(db_item)
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
