@@ -12,7 +12,7 @@ def create(db: Session, request: MenuItemBase):
         name=request.name,
         description=request.description,
         price=request.price,
-        quantity=request.quantity,
+        #quantity=request.quantity,
         calories=request.calories,
         category=request.category
     )

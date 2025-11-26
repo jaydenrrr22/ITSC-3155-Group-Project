@@ -5,7 +5,7 @@ from .recipes import Recipe
 class MenuItemBase(BaseModel):
     name: str
     description: Optional[str] = None
-    quantity: Optional[int] = None
+    #quantity: Optional[int] = None
     price: float
     calories: Optional[int] = None
     category: str
@@ -16,7 +16,7 @@ class MenuItemsCreation(BaseModel):
 class MenuItemsUpdate(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
-    quantity: Optional[int] = None
+    #quantity: Optional[int] = None
     price: Optional[float] = None
     calories: Optional[int] = None
     category: Optional[str] = None

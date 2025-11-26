@@ -5,7 +5,7 @@ class RatingReviewBase(BaseModel):
     reviewText: str
     ratingScore: condecimal(max_digits=2, decimal_places=1)
     customer_id: Optional[int] = None  # optional if not passed directly
-    sandwich_id: int
+    menu_item_id: int
 
 
 class RatingReviewCreate(RatingReviewBase):

@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status, Response, Depends
 from ..models import ratings_reviews as model
+from ..models.menu_items import MenuItem
 from ..models.sandwiches import Sandwich
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -10,7 +11,7 @@ def create(db: Session, request):
         reviewText=request.reviewText,
         ratingScore=request.ratingScore,
         customer_id=request.customer_id,
-        sandwich_id=request.sandwich_id
+        menu_item_id=request.menu_item_id,
     )
 
     try:
@@ -23,10 +24,10 @@ def create(db: Session, request):
 
     return new_item
 
-def get_reviews(db: Session):
+def get_complaints(db: Session):
     result = (
-        db.query(model.RatingsReviews, Sandwich.sandwich_name)
-        .join(Sandwich, Sandwich.id == model.RatingsReviews.sandwich_id)
+        db.query(model.RatingsReviews, MenuItem.name)
+        .join(MenuItem, MenuItem.id == model.RatingsReviews.menu_item_id)
         .filter(model.RatingsReviews.ratingScore < 3)
         .all()
     )
