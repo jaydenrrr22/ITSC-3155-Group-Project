@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 class RevenuesItem(BaseModel):
-    sandwich: str
+    menu_items: str
     quantity_sold: int
     revenue: float
 

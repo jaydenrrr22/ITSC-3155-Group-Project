@@ -2,7 +2,6 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException, status, Response, Depends
 from ..models import ratings_reviews as model
 from ..models.menu_items import MenuItem
-from ..models.sandwiches import Sandwich
 from sqlalchemy.exc import SQLAlchemyError
 
 
