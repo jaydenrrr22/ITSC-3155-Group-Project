@@ -31,3 +31,12 @@ def get_complaints(db: Session):
         .all()
     )
     return result
+
+def get_reviews_by_menu_item_id(db: Session, menu_item_id: int):
+    result = (
+        db.query(model.RatingsReviews)
+        .filter(model.RatingsReviews.menu_item_id == menu_item_id)
+        .all()
+    )
+
+    return result
