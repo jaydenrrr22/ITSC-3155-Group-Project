@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter, Depends, FastAPI, status, Response
 from sqlalchemy.engine import row
 from sqlalchemy.orm import Session
@@ -29,3 +31,12 @@ def get_bad_reviews(db: Session = Depends(get_db)):
         }
         for row in complaints
     ]
+
+@router.get("/reviews/{menu_item_id}", response_model=List[schema.RatingReview])
+def get_reviews_by_menu_id(menu_item_id: int, db: Session = Depends(get_db)):
+    reviews = controller.get_reviews_by_menu_item_id(db=db, menu_item_id=menu_item_id)
+
+    if not reviews:
+        return { "message": "No reviews found" }
+
+    return reviews
