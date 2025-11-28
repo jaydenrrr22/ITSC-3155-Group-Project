@@ -5,27 +5,27 @@ from ..schemas import payment_information as schema
 from ..dependencies.database import engine, get_db
 
 router = APIRouter(
-    tags=['Payment_informations'],
-    prefix="/payment_informations"
+    tags=['PaymentInformation'],
+    prefix="/payment_information"
 )
 
 
-@router.post("/", response_model=schema.Payment_information)
+@router.post("/", response_model=schema.PaymentInformation)
 def create(request: schema.PaymentInformationCreate, db: Session = Depends(get_db)):
     return controller.create(db=db, request=request)
 
 
-@router.get("/", response_model=list[schema.Payment_information])
+@router.get("/", response_model=list[schema.PaymentInformation])
 def read_all(db: Session = Depends(get_db)):
     return controller.read_all(db)
 
 
-@router.get("/{item_id}", response_model=schema.Payment_information)
+@router.get("/{item_id}", response_model=schema.PaymentInformation)
 def read_one(item_id: int, db: Session = Depends(get_db)):
     return controller.read_one(db, item_id=item_id)
 
 
-@router.put("/{item_id}", response_model=schema.Payment_information)
+@router.put("/{item_id}", response_model=schema.PaymentInformation)
 def update(item_id: int, request: schema.PaymentInformationUpdate, db: Session = Depends(get_db)):
     return controller.update(db=db, request=request, item_id=item_id)
 
