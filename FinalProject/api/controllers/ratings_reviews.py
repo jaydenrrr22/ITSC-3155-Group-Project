@@ -1,13 +1,16 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status, Response, Depends
 from ..models import ratings_reviews as model
+from ..models.menu_items import MenuItem
 from sqlalchemy.exc import SQLAlchemyError
 
 
 def create(db: Session, request):
-    new_item = model.ratings_reviews(
+    new_item = model.RatingsReviews(
         reviewText=request.reviewText,
-        ratingScore=request.ratingScore
+        ratingScore=request.ratingScore,
+        customer_id=request.customer_id,
+        menu_item_id=request.menu_item_id,
     )
 
     try:
@@ -19,3 +22,12 @@ def create(db: Session, request):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
 
     return new_item
+
+def get_complaints(db: Session):
+    result = (
+        db.query(model.RatingsReviews, MenuItem.name)
+        .join(MenuItem, MenuItem.id == model.RatingsReviews.menu_item_id)
+        .filter(model.RatingsReviews.ratingScore < 3)
+        .all()
+    )
+    return result

@@ -1,13 +1,43 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status, Response, Depends
 from ..models import orders as model
+from ..models.payment_information import PaymentInformation
 from sqlalchemy.exc import SQLAlchemyError
+from datetime import date
+
+from ..schemas.payment_information import PaymentInformationBase
 
 
 def create(db: Session, request):
+    # 1. Fetch payment record for this customer
+    payment = (
+        db.query(PaymentInformation)
+        .filter(PaymentInformation.customer_id == request.customer_id)
+        .order_by(PaymentInformation.id.desc())
+        .first()
+    )
+
+    if not payment:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="No payment information found for this customer."
+        )
+
+    # 2. Validate that customer paid enough
+    if float(payment.amount) < float(request.total_amount):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Insufficient funds. Paid: {payment.amount}, order requires: {request.total_amount}"
+        )
+
     new_item = model.Order(
-        customer_name=request.customer_name,
-        description=request.description
+        tracking_number=request.tracking_number,
+        order_status=request.order_status,
+        total_amount=request.total_amount,
+        order_date=request.order_date,
+        description=request.description,
+        billing_address=request.billing_address,
+        customer_id=request.customer_id
     )
 
     try:
@@ -21,9 +51,17 @@ def create(db: Session, request):
     return new_item
 
 
-def read_all(db: Session):
+def read_all(db: Session, start_date: date=None, end_date: date=None):
     try:
-        result = db.query(model.Order).all()
+        query = db.query(model.Order)
+
+        # If both dates are provided → filter by range
+        if start_date and end_date:
+            query = query.filter(model.Order.order_date >= start_date, model.Order.order_date <= end_date)
+
+        result = query.all()
+
+        return result
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)

@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status, Response
 from ..models import resources as model
-from ..schemas.resource import ResourceCreate, ResourceUpdate
+from ..schemas.resources import ResourceCreate, ResourceUpdate
 from sqlalchemy.exc import SQLAlchemyError
 
 def create(db: Session, request: ResourceCreate):
@@ -40,14 +40,14 @@ def read_one(db: Session, item_id):
 
 def update(db: Session, item_id: int, request: ResourceUpdate):
     try:
-        item = db.query(model.Resource).filter(model.Resource.id == item_id)
-        db_item = item.first()
+        db_item = db.query(model.Resource).filter(model.Resource.id == item_id).first()
         if not db_item:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Id not found!")
         update_data = request.dict(exclude_unset=True)
-        item.update(update_data, synchronize_session=False)
+        for key, value in update_data.items():
+            setattr(db_item, key, value)
         db.commit()
-        db.refresh(item)
+        db.refresh(db_item)
     except SQLAlchemyError as e:
         error = str(e.__dict__['orig'])
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)

@@ -2,7 +2,6 @@ from . import (
     customers,
     orders,
     order_details,
-    sandwiches,
     recipes,
     resources,
     ratings_reviews,

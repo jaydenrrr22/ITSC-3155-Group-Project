@@ -4,6 +4,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from .routers import index as indexRoute
 from .models import model_loader
 from .dependencies.config import conf
+from sqlalchemy import text
+from .dependencies.database import engine
 
 
 app = FastAPI()
@@ -17,6 +19,16 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+#Resets the increment on tables to start from one
+#order_details does not start at 1 in the DB
+@app.on_event("startup")
+def reset_auto_increment():
+    with engine.connect() as conn:
+        conn.execute(text("ALTER TABLE customers AUTO_INCREMENT = 1"))
+        conn.execute(text("ALTER TABLE orders AUTO_INCREMENT = 1"))
+        conn.execute(text("ALTER TABLE order_details AUTO_INCREMENT = 1"))
+        conn.commit()
 
 model_loader.index()
 indexRoute.load_routes(app)

@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, FastAPI, status, Response
+from sqlalchemy.engine import row
 from sqlalchemy.orm import Session
 from ..controllers import ratings_reviews as controller
 from ..schemas import ratings_reviews as schema
@@ -12,3 +13,19 @@ router = APIRouter(
 @router.post("/", response_model=schema.RatingReview)
 def create(request: schema.RatingReviewCreate, db: Session = Depends(get_db)):
     return controller.create(db=db, request=request)
+
+@router.get("/complaints")
+def get_bad_reviews(db: Session = Depends(get_db)):
+    complaints = controller.get_complaints(db=db)
+
+    if not complaints:
+        return { "message": "No complaints found" }
+
+    return [
+        {
+            "menu_item": row.name,
+            "score": row[0].ratingScore,
+            "complaints": row[0].reviewText
+        }
+        for row in complaints
+    ]

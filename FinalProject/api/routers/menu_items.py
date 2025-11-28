@@ -5,13 +5,13 @@ from ..schemas import menu_items as schema
 from ..dependencies.database import engine, get_db
 
 router = APIRouter(
-    tags=['Menu Items'],
+    tags=['MenuItems'],
     prefix="/menu_items"
 )
 
 
 @router.post("/", response_model=schema.MenuItem)
-def create(request: schema.MenuItemsCreation, db: Session = Depends(get_db)):
+def create(request: schema.MenuItemBase, db: Session = Depends(get_db)):
     return controller.create(db=db, request=request)
 
 
