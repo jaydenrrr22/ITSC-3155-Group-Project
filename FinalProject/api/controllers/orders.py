@@ -2,10 +2,10 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException, status, Response, Depends
 from ..models import orders as model
 from ..models.payment_information import PaymentInformation
+from ..models.menu_items import MenuItem
+from ..models.resources import Resource
 from sqlalchemy.exc import SQLAlchemyError
 from datetime import date
-
-from ..schemas.payment_information import PaymentInformationBase
 
 
 def create(db: Session, request):
@@ -29,6 +29,27 @@ def create(db: Session, request):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Insufficient funds. Paid: {payment.amount}, order requires: {request.total_amount}"
         )
+
+    # Check resource inventory for each menu item requested
+    menu_item = (
+        db.query(MenuItem)
+        .filter(MenuItem.id == request.menu_item_id)
+        .first()
+    )
+    if not menu_item:
+        raise HTTPException(404, f"Menu item {request.menu_item_id} not found")
+
+    # Each menu item requires recipes (ingredients)
+    for recipe in menu_item.recipes:
+        resource = db.query(Resource).filter(Resource.id == recipe.resource_id).first()
+
+        required = recipe.amount * request.amount
+
+        if resource.amount < required:
+            raise HTTPException(
+                400,
+                f"Not enough {resource.item}. Required: {required}, Available: {resource.amount}"
+            )
 
     new_item = model.Order(
         tracking_number=request.tracking_number,

@@ -18,6 +18,8 @@ class OrderBase(BaseModel):
 
 class OrderCreate(OrderBase):
     customer_id: int
+    menu_item_id: int
+    amount: int = 1
 
 
 class OrderUpdate(BaseModel):
