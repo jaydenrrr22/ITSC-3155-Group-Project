@@ -4,6 +4,10 @@ from .config import conf
 from urllib.parse import quote_plus
 
 SQLALCHEMY_DATABASE_URL = f"mysql+pymysql://{conf.db_user}:{quote_plus(conf.db_password)}@{conf.db_host}:{conf.db_port}/{conf.db_name}?charset=utf8mb4"
+SQLALCHEMY_DATABASE_URL = (f"mysql+pymysql://{conf.db_user}:"
+                           f"{quote_plus(conf.db_password)}@{conf.db_host}:"
+                           f"{conf.db_port}/{conf.db_database}?charset=utf8mb4")
+
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL
 )
