@@ -19,6 +19,9 @@ def create(request: schema.OrderDetailCreate, db: Session = Depends(get_db)):
 def read_all(db: Session = Depends(get_db)):
     return controller.read_all(db)
 
+@router.get("/status/{id}", response_model=schema.OrderDetail)
+def update_status(id: int, db: Session = Depends(get_db)):
+    return controller.update_status(db, id=id)
 
 @router.get("/{item_id}", response_model=schema.OrderDetail)
 def read_one(item_id: int, db: Session = Depends(get_db)):

@@ -15,5 +15,5 @@ class MenuItem(Base):
     category = Column(String(50), nullable=False)
 
     recipes = relationship("Recipe", back_populates="menu_item")
-    order_details = relationship("OrderDetail", back_populates="menu_item")
     reviews = relationship("RatingsReviews", back_populates="menu_item")
+    order_details = relationship("OrderDetail", back_populates="menu_item")
