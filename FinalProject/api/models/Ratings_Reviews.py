@@ -10,7 +10,7 @@ class RatingsReviews(Base):
     ratingScore = Column(DECIMAL(2, 1), nullable=False)
 
     customer_id = Column(Integer, ForeignKey("customers.id"), nullable=False)
-    customer = relationship("Customers", back_populates="reviews")
-
     menu_item_id = Column(Integer, ForeignKey("menu_items.id"), nullable=False)
+
+    customer = relationship("Customers", back_populates="reviews")
     menu_item = relationship("MenuItem", back_populates="reviews")

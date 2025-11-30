@@ -12,4 +12,5 @@ class PaymentInformation(Base):
     amount = Column(DECIMAL(10, 2), nullable=False)
 
     customer_id = Column(Integer, ForeignKey("customers.id"), nullable=False)
+
     customer = relationship("Customers", back_populates="payments")
