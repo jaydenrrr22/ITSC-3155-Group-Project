@@ -6,9 +6,9 @@ from ..dependencies.database import Base
 class Order(Base):
     __tablename__ = "orders"
 
-    #order Id
+    # order Id
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    #tracking number for order
+    # tracking number for order
     tracking_number = Column(Integer, unique=True, nullable=False)
     # Status: e.g., "Pending", "Preparing", "Completed"
     order_status = Column(String(100), nullable=False)
@@ -22,6 +22,7 @@ class Order(Base):
     # Relationship to Customer (if Customer table exists)
     customer_id = Column(Integer, ForeignKey("customers.id"), nullable=False)
 
+    # Use string reference here to avoid circular import
     customer = relationship("Customers", back_populates="orders")
 
     # Relationship to order details (empty until you build it)
