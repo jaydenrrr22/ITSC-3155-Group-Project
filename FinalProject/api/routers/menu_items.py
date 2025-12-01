@@ -3,9 +3,10 @@ from sqlalchemy.orm import Session
 from ..controllers import menu_items as controller
 from ..schemas import menu_items as schema
 from ..dependencies.database import engine, get_db
+from fastapi import Query
 
 router = APIRouter(
-    tags=['MenuItems'],
+    tags=['Menu Items'],
     prefix="/menu_items"
 )
 
@@ -33,3 +34,9 @@ def update(item_id: int, request: schema.MenuItemsUpdate, db: Session = Depends(
 @router.delete("/{item_id}")
 def delete(item_id: int, db: Session = Depends(get_db)):
     return controller.delete(db=db, item_id=item_id)
+
+
+
+@router.get("/category/{category}", response_model=list[schema.MenuItem])
+def get_menu_items_by_category(category: str, db: Session = Depends(get_db)):
+    return controller.search_by_category(db, category)
