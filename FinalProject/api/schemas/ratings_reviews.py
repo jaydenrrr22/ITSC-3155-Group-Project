@@ -17,3 +17,10 @@ class RatingReview(RatingReviewBase):
 
     class Config:
         orm_mode = True  # allows reading SQLAlchemy objects directly
+
+class RatingReviewUpdate(BaseModel):
+    reviewText: Optional[str] = None
+    ratingScore: Optional[condecimal(max_digits=2, decimal_places=1)] = None
+
+    class Config:
+        from_attribute = True

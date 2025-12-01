@@ -40,3 +40,30 @@ def get_reviews_by_menu_item_id(db: Session, menu_item_id: int):
     )
 
     return result
+
+def update_review_by_id(db, review_id, request):
+    try:
+        item = db.query(model.RatingsReviews).filter(model.RatingsReviews.id == review_id)
+        if not item.first():
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Id not found!")
+        update_data = request.dict(exclude_unset=True)
+        item.update(update_data, synchronize_session=False)
+        db.commit()
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
+    return item.first()
+
+def delete_review_by_id(db: Session, review_id):
+    try:
+        item = db.query(model.RatingsReviews).filter(model.RatingsReviews.id == review_id)
+        if not item.first():
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Id not found!")
+        item.delete(synchronize_session=False)
+        db.commit()
+        return {"message": "Review deleted successfully"}
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+

@@ -48,3 +48,22 @@ def get_reviews_by_menu_id(menu_item_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail = "This item has no reviews")
 
     return controller.get_reviews_by_menu_item_id(db, menu_item_id)
+
+@router.put("/reviews/{review_id}", response_model=schema.RatingReview)
+def edit_reviews_by_menu(review_id: int, request: schema.RatingReviewUpdate, db: Session = Depends(get_db)):
+    try:
+        updated = controller.update_review_by_id(db, review_id=review_id, request=request)
+        return updated
+    except HTTPException as e:
+        if e.status_code == 404:
+            raise HTTPException(status_code=404, detail=f"Review with {review_id} does not exist")
+        raise e
+
+@router.delete("/reviews/{review_id}", status_code=204)
+def delete_review_by_id(review_id: int, db: Session = Depends(get_db)):
+    try:
+        controller.delete_review_by_id(db, review_id=review_id)
+    except HTTPException as e:
+        if e.status_code == 404:
+            raise HTTPException(status_code=404, detail=f"Review with {review_id} does not exist")
+        raise e
