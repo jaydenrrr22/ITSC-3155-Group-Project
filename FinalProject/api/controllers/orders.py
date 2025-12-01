@@ -126,7 +126,25 @@ def update(db: Session, item_id, request):
         item = db.query(model.Order).filter(model.Order.id == item_id)
         if not item.first():
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Id not found!")
-        update_data = request.dict(exclude_unset=True)
+        # Only include fields that were explicitly set AND are not None
+        update_data = request.model_dump(exclude_unset=True, exclude_none=True)
+
+        # Validate foreign key references before applying the update to avoid DB FK errors
+        if 'customer_id' in update_data:
+            cust = db.query(Customers).filter(Customers.id == update_data['customer_id']).first()
+            if not cust:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Customer id {update_data['customer_id']} not found")
+
+        if 'menu_item_id' in update_data:
+            mi = db.query(MenuItem).filter(MenuItem.id == update_data['menu_item_id']).first()
+            if not mi:
+                raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"MenuItem id {update_data['menu_item_id']} not found")
+
+        # If there's nothing to update, return the current item
+        if not update_data:
+            return item.first()
+
+        # Apply the update
         item.update(update_data, synchronize_session=False)
         db.commit()
     except SQLAlchemyError as e:
@@ -140,6 +158,13 @@ def delete(db: Session, item_id):
         item = db.query(model.Order).filter(model.Order.id == item_id)
         if not item.first():
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Id not found!")
+        # Ensure child order_details are removed first to avoid FK constraint errors
+        try:
+            db.query(order_details.OrderDetail).filter(order_details.OrderDetail.order_id == item_id).delete(synchronize_session=False)
+        except SQLAlchemyError:
+            # If the DB has ON DELETE CASCADE this may not be necessary; ignore errors here and proceed to delete the order
+            pass
+
         item.delete(synchronize_session=False)
         db.commit()
     except SQLAlchemyError as e:

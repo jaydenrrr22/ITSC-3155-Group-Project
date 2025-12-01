@@ -28,12 +28,19 @@ class OrderCreate(BaseModel):
     special: Optional[str] = None
 
 
+# OrderUpdate should NOT inherit from OrderBase because OrderBase requires all fields.
+# Instead define all fields as Optional to allow partial updates.
 class OrderUpdate(BaseModel):
-    tracking_number: Optional[int] = None
+    tracking_number: Optional[str] = None
     order_status: Optional[str] = None
     total_amount: Optional[float] = None
     description: Optional[str] = None
     billing_address: Optional[str] = None
+    order_date: Optional[datetime] = None
+    customer_id: Optional[int] = None
+    menu_item_id: Optional[int] = None
+    type: Optional[str] = None
+    special: Optional[str] = None
 
 
 class Order(OrderBase):

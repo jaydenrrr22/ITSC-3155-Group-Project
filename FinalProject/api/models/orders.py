@@ -19,11 +19,17 @@ class Order(Base):
     type = Column(String(50), default="pickup")
     special = Column(String(200))
     # Relationship to Customer (if Customer table exists)
-    customer_id = Column(Integer, ForeignKey("customers.id"), nullable=False)
-    menu_item_id = Column(Integer, ForeignKey("menu_items.id"), nullable=False)
+    customer_id = Column(Integer, ForeignKey("customers.id", ondelete="CASCADE"), nullable=False)
+    menu_item_id = Column(Integer, ForeignKey("menu_items.id", ondelete="CASCADE"), nullable=False)
     # Use string reference here to avoid circular import
     customer = relationship("Customers", back_populates="orders")
 
-    order_details = relationship("OrderDetail", back_populates="order")
+    # Cascade deletes from Order -> OrderDetail and enable passive deletes to respect DB ON DELETE CASCADE
+    order_details = relationship(
+        "OrderDetail",
+        back_populates="order",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
+    )
     promotions = relationship("Promotions", back_populates="order")
 
