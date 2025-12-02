@@ -9,10 +9,10 @@ class MenuItemBase(BaseModel):
     calories: Optional[int] = None
     category: str
 
-class MenuItemsCreation(BaseModel):
+class MenuItemCreate(MenuItemBase):
     pass
 
-class MenuItemsUpdate(BaseModel):
+class MenuItemUpdate(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
     quantity: Optional[int] = None
@@ -21,7 +21,7 @@ class MenuItemsUpdate(BaseModel):
     category: Optional[str] = None
 
 class MenuItem(MenuItemBase):
-    id: int
+    id: Optional[int] = None
     recipe: List["Recipe"] = []
 
     class Config:

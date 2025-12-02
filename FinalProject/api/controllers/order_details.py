@@ -50,8 +50,14 @@ def create(db: Session, request):
         order_type=order.type,
         billing_address=order.billing_address,
         tracking_number=order.tracking_number,
-        amount=order.total_amount
+        amount=(request.quantity * request.price)
     )
+    # Attach transient attributes for API consumers/tests (not persisted fields)
+    try:
+        new_item.quantity = request.quantity
+        new_item.price = request.price
+    except Exception:
+        pass
 
     try:
         db.add(new_item)
@@ -101,6 +107,9 @@ def update(db: Session, item_id, request):
         if not item.first():
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Id not found!")
         update_data = request.model_dump(exclude_unset=True, exclude_none=True)
+        # Remove transient fields that aren't columns in the DB
+        update_data.pop('quantity', None)
+        update_data.pop('price', None)
         if not update_data:
             return item.first()
         item.update(update_data, synchronize_session=False)

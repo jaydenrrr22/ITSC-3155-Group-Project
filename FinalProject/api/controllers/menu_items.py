@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status, Response
 from ..models import menu_items as model
-from ..schemas.menu_items import MenuItemsUpdate, MenuItemBase
+from ..schemas.menu_items import MenuItemUpdate, MenuItemBase
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import func
 
@@ -45,7 +45,7 @@ def read_one(db: Session, item_id):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
     return item
 
-def update(db: Session, item_id: int, request: MenuItemsUpdate):
+def update(db: Session, item_id: int, request: MenuItemUpdate):
     try:
         item = db.query(model.MenuItem).filter(model.MenuItem.id == item_id)
         db_item = item.first()

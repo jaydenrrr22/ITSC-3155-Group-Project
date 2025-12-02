@@ -26,8 +26,8 @@ class PromotionUpdate(BaseModel):
 
 class Promotion(PromotionBase):
     """Returned in responses"""
-    id: int
-    generate_date: datetime
+    id: Optional[int] = None
+    generate_date: Optional[datetime] = None
 
     # ✅ Pydantic v2 replacement for orm_mode
     model_config = {

@@ -13,7 +13,7 @@ class RatingReviewCreate(RatingReviewBase):
 
 
 class RatingReview(RatingReviewBase):
-    id: int
+    id: Optional[int] = None
 
     class Config:
         orm_mode = True  # allows reading SQLAlchemy objects directly

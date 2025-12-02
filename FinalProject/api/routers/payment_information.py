@@ -10,23 +10,23 @@ router = APIRouter(
 )
 
 
-@router.post("/", response_model=schema.PaymentInformation)
-def create(request: schema.PaymentInformationCreate, db: Session = Depends(get_db)):
+@router.post("/", response_model=schema.PaymentInfo)
+def create(request: schema.PaymentInfoCreate, db: Session = Depends(get_db)):
     return controller.create(db=db, request=request)
 
 
-@router.get("/", response_model=list[schema.PaymentInformation])
+@router.get("/", response_model=list[schema.PaymentInfo])
 def read_all(db: Session = Depends(get_db)):
     return controller.read_all(db)
 
 
-@router.get("/{item_id}", response_model=schema.PaymentInformation)
+@router.get("/{item_id}", response_model=schema.PaymentInfo)
 def read_one(item_id: int, db: Session = Depends(get_db)):
     return controller.read_one(db, item_id=item_id)
 
 
-@router.put("/{item_id}", response_model=schema.PaymentInformation)
-def update(item_id: int, request: schema.PaymentInformationUpdate, db: Session = Depends(get_db)):
+@router.put("/{item_id}", response_model=schema.PaymentInfo)
+def update(item_id: int, request: schema.PaymentInfoUpdate, db: Session = Depends(get_db)):
     return controller.update(db=db, request=request, item_id=item_id)
 
 
