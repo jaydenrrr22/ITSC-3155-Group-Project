@@ -9,13 +9,11 @@ from ..models.menu_items import MenuItem
 
 
 def get_total_revenues(db: Session, target_date: date):
-    total_revenues = (db.query(func.sum(OrderDetail.amount * MenuItem.price))
-                      .join(Order, Order.id == OrderDetail.order_id)
-                      .join(MenuItem, MenuItem.id == OrderDetail.menu_item_id)
-                      .filter(cast(Order.order_date, Date) == target_date))
+    total_revenues = (
+        db.query(func.sum(OrderDetail.amount))
+        .join(Order, Order.id == OrderDetail.order_id)
+        .filter(cast(Order.order_date, Date) == target_date)
+    )
+
     total_amount = total_revenues.scalar()
-
-    if total_amount is None:
-        return 0.0
-
-    return float(total_amount)
+    return float(total_amount or 0.0)
